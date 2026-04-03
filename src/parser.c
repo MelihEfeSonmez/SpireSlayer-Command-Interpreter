@@ -29,20 +29,45 @@ int is_valid_integer(const char *str) {
 }
 
 // Function: tokenize the line and return number of token
-int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN]) {
+int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int spaces_before[MAX_TOKENS]) {
     int count = 0;
-    char temp_line[1026];
-    strcpy(temp_line, line);
+    const char *p = line; // Pointer
 
-    char *token = strtok(temp_line, " ");
-
-    while (token != NULL && count < MAX_TOKENS) {
-        strcpy(tokens[count], token);
-        count++;
-        token = strtok(NULL, " ");
+    while (*p != '\0') {
+        int space_count = 0;
+        
+        // Count and skip any spaces before the next word
+        while (*p == ' ') { 
+            space_count++; 
+            p++; 
+        }
+        
+        // If we hit the end of the string after skipping spaces, exit the loop
+        if (*p == '\0') break;
+        
+        // Record how many spaces preceded this specific token
+        if (count < MAX_TOKENS) { 
+            spaces_before[count] = space_count; 
+        }
+        
+        // Determine the length of the current
+        int len = 0;
+        while (p[len] != '\0' && p[len] != ' ') { 
+            len++; 
+        }
+        
+        // Copy the token into our array and add the null-terminator
+        if (count < MAX_TOKENS) { 
+            strncpy(tokens[count], p, len); 
+            tokens[count][len] = '\0'; 
+            count++; 
+        } 
+        
+        // Advance the pointer past the word that copied
+        p += len; 
     }
     
-    return count;
+    return count; 
 }
 
 // Function: concatenate the tokens as a name

@@ -10,9 +10,9 @@
 int is_valid_integer(const char *str);
 
 // Function: 
-int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN]);
+int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int spaces_before[MAX_TOKENS]);
 
 // Function: 
-void join_tokens(char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int start_index, int end_index, char *joined_tokens);
+void extract_name(char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int start_index, int end_index, char *extracted_name);
 
 #endif
