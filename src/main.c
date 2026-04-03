@@ -156,13 +156,27 @@ static int execute_line(GameState *state, const char *line) {
     }
 
     // II) question—a read-only query
+    // At least 2 tokens and ends with '?'
+    if (token_count >= 2 && strcmp(tokens[token_count - 1], "?") == 0) {
 
         // a) Total gold ?
+        if (token_count == 3 && strcmp(tokens[0], "Total") == 0 && strcmp(tokens[1], "gold") == 0) {
+            execute_gold_query(state);
+            return 1;
+        }
 
         // b) Floor ?
+        if (token_count == 2 && strcmp(tokens[0], "Floor") == 0) {
+            execute_floor_query(state);
+            return 1;
+        }
 
         // c) Where ?
-
+        if (token_count == 2 && strcmp(tokens[0], "Where") == 0) {
+            execute_where_query(state);
+            return 1;
+        }
+        
         // d) Total card <card> ?
 
         // e) Total upgraded card <card> ?
@@ -185,7 +199,7 @@ static int execute_line(GameState *state, const char *line) {
 
 
 
-
+    }
     // IT WILL BE REMOVED ***********************
     (void)state;
     (void)line;

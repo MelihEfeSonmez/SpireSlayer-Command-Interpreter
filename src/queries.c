@@ -5,19 +5,19 @@
 
 // ---FUNCTIONS--- (II) question—a read-only query)
 
-// Function: 
+// Function: Total gold
 void execute_gold_query(GameState *state) {
-
+    printf("%d\n", state->gold);
 }
 
-// Funciton: 
+// Funciton: Floor
 void execute_floor_query(GameState *state) {
-
+    printf("%d\n", state->floor);
 }
 
-// Funciton: 
+// Funciton: Where
 void execute_where_query(GameState *state) {
-
+    printf("%s\n", state->current_room);
 }
 
 // Funciton: 
