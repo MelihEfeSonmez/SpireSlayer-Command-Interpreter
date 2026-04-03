@@ -3,6 +3,7 @@
 
 #define MAX_LINE_LENGTH 1024
 
+// Structure: game state
 typedef struct {
     int gold;
     int current_hp;
@@ -11,6 +12,7 @@ typedef struct {
     char current_room[16];
 } GameState;
 
+// Function: initialize the game state with starting conditions
 static void init_game_state(GameState *state) {
     state->gold = 0;
     state->current_hp = 80;
@@ -19,6 +21,7 @@ static void init_game_state(GameState *state) {
     strcpy(state->current_room, "NONE");
 }
 
+// Function: remove new line character
 static void chomp_newline(char *line) {
     size_t len = strlen(line);
 
@@ -27,6 +30,7 @@ static void chomp_newline(char *line) {
     }
 }
 
+// Function: parse and execute the command line
 static int execute_line(GameState *state, const char *line) {
     (void)state;
     (void)line;
@@ -43,26 +47,32 @@ static int execute_line(GameState *state, const char *line) {
     return 0;
 }
 
+// Function: main 
 int main(void) {
     char line[MAX_LINE_LENGTH + 2];
     GameState state;
 
     init_game_state(&state);
 
+    // loop which continues until reaching "Exit" command line
     while (1) {
-        printf(">> ");
+        printf("> "); // "> " instead of ">> " (in description)
         fflush(stdout);
 
+        // check whether there is any command line
         if (fgets(line, sizeof(line), stdin) == NULL) {
             break;
         }
 
-        chomp_newline(line);
+        chomp_newline(line); // remove new line character
 
+        // check "Exit" command line
         if (strcmp(line, "Exit") == 0) {
             break;
         }
 
+        // try to parse and execute the command line 
+        // if fails, print "INVALID"
         if (!execute_line(&state, line)) {
             printf("INVALID\n");
         }
