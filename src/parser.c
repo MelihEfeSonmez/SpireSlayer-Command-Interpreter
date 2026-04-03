@@ -7,7 +7,7 @@
 // ---FUNCTIONS---
 
 // Function: check whether the integer is valid
-int is_valid_integer(const char *str) {
+int is_valid_positive_integer(const char *str) {
 
     if (str == NULL || str[0] == '\0') { // null or empty
         return 0;
@@ -29,7 +29,7 @@ int is_valid_integer(const char *str) {
 }
 
 // Function: tokenize the line and return number of token
-int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int spaces_before[MAX_TOKENS]) {
+int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int spaces_before[MAX_TOKENS]) {
     int count = 0;
     const char *p = line; // Pointer
 
@@ -71,7 +71,7 @@ int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int 
 }
 
 // Function: concatenate the tokens as a name
-void extract_name(char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int start_index, int end_index, char *extracted_name) {
+void extract_name(char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int start_index, int end_index, char *extracted_name) {
     extracted_name[0] = '\0'; // clean for strcat
 
     for (int i = start_index; i <= end_index; i++) {

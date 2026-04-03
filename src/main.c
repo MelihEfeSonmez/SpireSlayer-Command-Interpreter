@@ -7,7 +7,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_LINE_LENGTH 1024
 
 // ---FUNCTIONS---
 
@@ -40,7 +39,7 @@ static int execute_line(GameState *state, const char *line) {
 
         // a) Ironclad gains <n> gold
         if (token_count == 4 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[3], "gold") == 0) {
-            if (is_valid_integer(tokens[2])) {
+            if (is_valid_positive_integer(tokens[2])) {
                 int amount = atoi(tokens[2]);
                 
                 execute_gain_gold(state, amount);

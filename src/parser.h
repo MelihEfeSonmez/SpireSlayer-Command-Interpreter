@@ -1,18 +1,18 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#define MAX_TOKENS 300
-#define MAX_TOKEN_LEN 100
+#define MAX_TOKENS 513
+#define MAX_LINE_LENGTH 1026
 
 // ---FUNCTION PROTOTYPES---
 
 // Function: 
-int is_valid_integer(const char *str);
+int is_valid_positive_integer(const char *str);
 
 // Function: 
-int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int spaces_before[MAX_TOKENS]);
+int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int spaces_before[MAX_TOKENS]);
 
 // Function: 
-void extract_name(char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int start_index, int end_index, char *extracted_name);
+void extract_name(char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int start_index, int end_index, char *extracted_name);
 
 #endif
