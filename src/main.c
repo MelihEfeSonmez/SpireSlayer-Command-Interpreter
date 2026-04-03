@@ -56,7 +56,7 @@ static int execute_line(GameState *state, const char *line) {
         
         // k) Ironclad enters <room> room
         
-        // l) Ironclad learns ... effective ...
+        // l) Ironclad learns ... effective ... (3 function calls as card, relic, and potion)
         
         // m) Ironclad fights <E>
         
@@ -77,7 +77,8 @@ static int execute_line(GameState *state, const char *line) {
         // v) Ironclad fights <E> for <n> gold
         
         // y) Ironclad gains <n> max hp
-
+    
+    }
 
     // II) question—a read-only query
 
@@ -107,7 +108,7 @@ static int execute_line(GameState *state, const char *line) {
         
         // m) Exhausts ?
 
-    }
+
 
 
     // IT WILL BE REMOVED ***********************
