@@ -24,6 +24,8 @@ int is_valid_integer(const char *str) {
             return 0;
         }    
     }
+
+    return 1;
     
 }
 
@@ -31,7 +33,7 @@ int is_valid_integer(const char *str) {
 int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN]) {
     int count = 0;
     char temp_line[1026];
-    strcopy(temp_line, line);
+    strcpy(temp_line, line);
 
     char *token = strtok(temp_line, " ");
 
