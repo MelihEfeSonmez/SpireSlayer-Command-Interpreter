@@ -23,8 +23,9 @@ static void chomp_newline(char *line) {
 // Function: parse and execute the command line
 static int execute_line(GameState *state, const char *line) {
     char tokens[MAX_TOKENS][MAX_LINE_LENGTH];
-    int token_count = tokenize_line(line, tokens);    
-    
+    int spaces_before[MAX_TOKENS];
+    int token_count = tokenize_line(line, tokens, spaces_before);    
+
     if (token_count == 0) { // empty line
         return 0;
     }
