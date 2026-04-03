@@ -1,5 +1,7 @@
 #include "state.h"
 #include "parser.h"
+#include "sentences.h"
+#include "queries.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -30,23 +32,96 @@ static int execute_line(GameState *state, const char *line) {
     // ---INPUT LINES---
     // I) sentence—a state-mutating command, 
     if (strcmp(tokens[0], "Ironclad") == 0) {
-        if (token_count < 3) {
+        
+        if (token_count < 3) { // no input line smaller than 3 tokens
             return 0;
         }
 
         // a) Ironclad gains <n> gold
+        if (token_count == 4 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[3], "gold") == 0) {
+            if (is_valid_integer(tokens[2])) {
+                int amount = atoi(tokens[2]);
+                
+                execute_gain_gold(state, amount);
+
+                return 1;
+            }
+        }
 
         // b) Ironclad gains card <C>
+        if (token_count >= 4 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[2], "card") == 0) {
+            char card_name[MAX_LINE_LENGTH];
+            extract_name(tokens, 3, token_count - 1, card_name);
+
+            execute_gain_card(state, card_name);
+            
+            return 1;
+        }
 
         // c) Ironclad gains relic <R>
+        if (token_count >= 4 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[2], "relic") == 0) {
+            char relic_name[MAX_LINE_LENGTH];
+            extract_name(tokens, 3, token_count - 1, relic_name);
+
+            execute_gain_relic(state, relic_name);
+            
+            return 1;
+        }
 
         // d) Ironclad gains potion <P>
+        if (token_count >= 4 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[2], "potion") == 0) {
+            char potion_name[MAX_LINE_LENGTH];
+            extract_name(tokens, 3, token_count - 1, potion_name);
+            
+            execute_gain_potion(state, potion_name);
+            
+            return 1;
+        }        
 
         // e) Ironclad buys card <C> for <n> gold
-        
+        if (token_count >= 7 && strcmp(tokens[1], "buys") == 0 && strcmp(tokens[2], "card") == 0 && 
+            strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
+            
+            if (is_valid_positive_integer(tokens[token_count - 2])) {
+                int price = atoi(tokens[token_count - 2]);
+                char card_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 4, card_name);
+
+                execute_buy_card(state, card_name, price);
+
+                return 1;
+            }
+        }
+   
         // f) Ironclad buys relic <R> for <n> gold
+        if (token_count >= 7 && strcmp(tokens[1], "buys") == 0 && strcmp(tokens[2], "relic") == 0 && 
+            strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
+            
+            if (is_valid_positive_integer(tokens[token_count - 2])) {
+                int price = atoi(tokens[token_count - 2]);
+                char relic_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 4, relic_name);
+
+                execute_buy_relic(state, relic_name, price);
+
+                return 1;
+            }
+        }
 
         // g) Ironclad buys potion <P> for <n> gold
+        if (token_count >= 7 && strcmp(tokens[1], "buys") == 0 && strcmp(tokens[2], "potion") == 0 && 
+            strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
+            
+            if (is_valid_positive_integer(tokens[token_count - 2])) {
+                int price = atoi(tokens[token_count - 2]);
+                char potion_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 4, potion_name);
+
+                execute_buy_potion(state, potion_name, price);
+
+                return 1;
+            }
+        }
 
         // h) Ironclad removes card <C>
 

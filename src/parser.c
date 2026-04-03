@@ -26,7 +26,6 @@ int is_valid_integer(const char *str) {
     }
 
     return 1;
-    
 }
 
 // Function: tokenize the line and return number of token
@@ -46,15 +45,15 @@ int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_TOKEN_LEN]) {
     return count;
 }
 
-// Function: concatenate the tokens as a string
-void join_tokens(char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int start_index, int end_index, char *joined_tokens) {
-    joined_tokens[0] = '\0'; // clean for strcat
+// Function: concatenate the tokens as a name
+void extract_name(char tokens[MAX_TOKENS][MAX_TOKEN_LEN], int start_index, int end_index, char *extracted_name) {
+    extracted_name[0] = '\0'; // clean for strcat
 
     for (int i = start_index; i <= end_index; i++) {
-        strcat(joined_tokens, tokens[i]);
+        strcat(extracted_name, tokens[i]);
 
         if (i< end_index) {
-            strcat(joined_tokens, " ");
+            strcat(extracted_name, " ");
         }
     }
 }
