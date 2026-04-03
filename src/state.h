@@ -84,6 +84,7 @@ typedef struct {
 
 // ---FUNCTION PROTOTYPES---
 
+// Function: initialize the game state with starting conditions
 void init_game_state(GameState *state);
 
 #endif
