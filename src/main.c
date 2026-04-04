@@ -176,7 +176,7 @@ static int execute_line(GameState *state, const char *line) {
             execute_where_query(state);
             return 1;
         }
-        
+
         // d) Total card <card> ?
 
         // e) Total upgraded card <card> ?
@@ -192,8 +192,16 @@ static int execute_line(GameState *state, const char *line) {
         // j) Defeated <enemy> ?
 
         // k) Health ?
+        if (token_count == 2 && strcmp(tokens[0], "Health") == 0) {
+            execute_health_query(state);
+            return 1;
+        }
 
         // l) Deck size ?
+        if (token_count == 3 && strcmp(tokens[0], "Deck") == 0 && strcmp(tokens[1], "size") == 0) {
+            execute_deck_size_query(state);
+            return 1;
+        }
         
         // m) Exhausts ?
 
