@@ -15,4 +15,7 @@ int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_LINE_LENGTH], in
 // Function: 
 void extract_name(char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int start_index, int end_index, char *extracted_name);
 
+// Function: 
+int is_valid_name(char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int spaces_before[MAX_TOKENS], int start_index, int end_index);
+
 #endif

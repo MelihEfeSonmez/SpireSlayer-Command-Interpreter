@@ -82,3 +82,43 @@ void extract_name(char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int start_index, int
         }
     }
 }
+
+// Function: check whether the name satisfies all formatting and keyword rules
+int is_valid_name(char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int spaces_before[MAX_TOKENS], int start_index, int end_index) {
+    
+    // Must consist of one or more words
+    if (start_index > end_index) {
+        return 0; 
+    }
+
+    // List of reserved keywords that cannot be used in a name
+    const char *reserved[] = {
+        "Ironclad", "gains", "gold", "max", "hp", "card", "relic", "potion", "buys", "for", "removes", "upgraded", "upgrades", "enters", "room", 
+        "learns", "is", "effective", "against", "fights", "heals", "takes", "damage", "discards", "sells", "marks", "as", "exhaust", "Total", 
+        "Floor", "Where", "Deck", "size", "Relics", "Potions", "What", "Defeated", "Health", "Exhausts", "Exit"
+    };
+
+    for (int i = start_index; i <= end_index; i++) {
+        
+        // Consecutive words must be separated by exactly one space
+        if (i > start_index && spaces_before[i] != 1) {
+            return 0;
+        }
+
+        // Each word must consist solely of English
+        for (int j = 0; tokens[i][j] != '\0'; j++) {
+            if (!isalpha(tokens[i][j])) {
+                return 0;
+            }
+        }
+
+        // No word in the name may be a reserved keyword
+        for (int k = 0; k < 40; k++) {
+            if (strcmp(tokens[i], reserved[k]) == 0) {
+                return 0;
+            }
+        }
+    }
+
+    return 1; // Passed all checks
+}
