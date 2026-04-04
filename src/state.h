@@ -9,7 +9,7 @@
 typedef struct {
     char *name;
     int base_count;
-    int upgraded_count;
+    int is_upgraded;
     int is_exhaust;
 } CardEntry;
 
