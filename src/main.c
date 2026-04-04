@@ -46,43 +46,60 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         }
 
         // b) Ironclad gains card <C>
         if (token_count >= 4 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[2], "card") == 0) {
-            char card_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 3, token_count - 1, card_name);
-
-            execute_gain_card(state, card_name);
             
-            return 1;
+            if (is_valid_name(tokens, spaces_before, 3, token_count - 1)) {
+                char card_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 1, card_name);
+
+                execute_gain_card(state, card_name);
+                
+                return 1;
+            }
+
+            return 0;  
         }
 
         // c) Ironclad gains relic <R>
         if (token_count >= 4 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[2], "relic") == 0) {
-            char relic_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 3, token_count - 1, relic_name);
-
-            execute_gain_relic(state, relic_name);
             
-            return 1;
+            if (is_valid_name(tokens, spaces_before, 3, token_count - 1)) {
+                char relic_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 1, relic_name);
+
+                execute_gain_relic(state, relic_name);
+                
+                return 1;
+            }
+            
+            return 0;
         }
 
         // d) Ironclad gains potion <P>
         if (token_count >= 4 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[2], "potion") == 0) {
-            char potion_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 3, token_count - 1, potion_name);
             
-            execute_gain_potion(state, potion_name);
+            if (is_valid_name(tokens, spaces_before, 3, token_count - 1)) {
+                char potion_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 1, potion_name);
+                
+                execute_gain_potion(state, potion_name);
+                
+                return 1;
+            }
             
-            return 1;
+            return 0;    
         }        
 
         // e) Ironclad buys card <C> for <n> gold
         if (token_count >= 7 && strcmp(tokens[1], "buys") == 0 && strcmp(tokens[2], "card") == 0 && 
             strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
             
-            if (is_valid_positive_integer(tokens[token_count - 2])) {
+            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 3, token_count - 4)) {
                 int price = atoi(tokens[token_count - 2]);
                 char card_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 3, token_count - 4, card_name);
@@ -91,13 +108,15 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         }
    
         // f) Ironclad buys relic <R> for <n> gold
         if (token_count >= 7 && strcmp(tokens[1], "buys") == 0 && strcmp(tokens[2], "relic") == 0 && 
             strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
             
-            if (is_valid_positive_integer(tokens[token_count - 2])) {
+            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 3, token_count - 4)) {
                 int price = atoi(tokens[token_count - 2]);
                 char relic_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 3, token_count - 4, relic_name);
@@ -106,13 +125,15 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         }
 
         // g) Ironclad buys potion <P> for <n> gold
         if (token_count >= 7 && strcmp(tokens[1], "buys") == 0 && strcmp(tokens[2], "potion") == 0 && 
             strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
             
-            if (is_valid_positive_integer(tokens[token_count - 2])) {
+            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 3, token_count - 4)) {
                 int price = atoi(tokens[token_count - 2]);
                 char potion_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 3, token_count - 4, potion_name);
@@ -121,49 +142,70 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         }
 
         // h) Ironclad removes card <C>
         if (token_count >= 4 && strcmp(tokens[1], "removes") == 0 && strcmp(tokens[2], "card") == 0) {
-            char card_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 3, token_count - 1, card_name);
+            
+            if (is_valid_name(tokens, spaces_before, 3, token_count - 1)) {
+                char card_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 1, card_name);
 
-            execute_remove_card(state, card_name);
+                execute_remove_card(state, card_name);
 
-            return 1;
+                return 1;
+            }
+            
+            return 0;
         }
 
         // i) Ironclad removes upgraded card <C>
         if (token_count >= 5 && strcmp(tokens[1], "removes") == 0 && strcmp(tokens[2], "upgraded") == 0 &&
             strcmp(tokens[3], "card") == 0) {
-            char card_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 4, token_count - 1, card_name);
+            
+            if (is_valid_name(tokens, spaces_before, 4, token_count - 1)) {    
+                char card_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 4, token_count - 1, card_name);
 
-            execute_remove_upgraded_card(state, card_name);
+                execute_remove_upgraded_card(state, card_name);
 
-            return 1;
+                return 1;
+            }
+            
+            return 0;
         }
 
         // j) Ironclad upgrades card <C>
         if (token_count >= 4 && strcmp(tokens[1], "upgrades") == 0 && strcmp(tokens[2], "card") == 0) {
-            char card_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 3, token_count - 1, card_name);
+                
+            if (is_valid_name(tokens, spaces_before, 3, token_count - 1)) {
+                char card_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 1, card_name);
 
-            execute_upgrade_card(state, card_name);
+                execute_upgrade_card(state, card_name);
 
-            return 1;
+                return 1;
+            }
+                
+            return 0;
         }
 
         // k) Ironclad enters <room> room
         if (token_count >= 4 && strcmp(tokens[1], "enters") == 0 && strcmp(tokens[token_count - 1], "room") == 0) {
-            char room_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 2, token_count - 2, room_name);
+              
+            if (is_valid_name(tokens, spaces_before, 2, token_count - 2)) {
+                char room_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 2, token_count - 2, room_name);
 
-            execute_enter_room(state, room_name);
+                execute_enter_room(state, room_name);
 
-            return 1;
+                return 1;
+            }
+            
+            return 0;
         }
-
 
         // l) Ironclad learns ... effective ... (3 function calls as card, relic, and potion)
         if (token_count >= 8 && strcmp(tokens[1], "learns") == 0) {
@@ -177,24 +219,28 @@ static int execute_line(GameState *state, const char *line) {
             }
 
             if (is_index != -1) { // if "... is effective against" exists
-                char entity_name[MAX_LINE_LENGTH];
-                char enemy_name[MAX_LINE_LENGTH];
+                    
+                if (is_valid_name(tokens, spaces_before, 3, is_index - 1) && is_valid_name(tokens, spaces_before, is_index + 3, token_count - 1)) {
+                    char entity_name[MAX_LINE_LENGTH];
+                    char enemy_name[MAX_LINE_LENGTH];
 
-                extract_name(tokens, 3, is_index - 1, entity_name); // extract name of card, relic, or potion
-                extract_name(tokens, is_index + 3, token_count - 1, enemy_name);    
+                    extract_name(tokens, 3, is_index - 1, entity_name); // extract name of card, relic, or potion
+                    extract_name(tokens, is_index + 3, token_count - 1, enemy_name);    
 
-                // 3 function calls as card, relic, and potion
-                if (strcmp(tokens[2], "card") == 0) {
-                    execute_learn_card_effective(state, entity_name, enemy_name);
-                    return 1;
-                } else if (strcmp(tokens[2], "relic") == 0) {
-                    execute_learn_relic_effective(state, entity_name, enemy_name);
-                    return 1;
-                } else if (strcmp(tokens[2], "potion") == 0) {
-                    execute_learn_potion_effective(state, entity_name, enemy_name);
-                    return 1;
+                    // 3 function calls as card, relic, and potion
+                    if (strcmp(tokens[2], "card") == 0) {
+                        execute_learn_card_effective(state, entity_name, enemy_name);
+                        return 1;
+                    } else if (strcmp(tokens[2], "relic") == 0) {
+                        execute_learn_relic_effective(state, entity_name, enemy_name);
+                        return 1;
+                    } else if (strcmp(tokens[2], "potion") == 0) {
+                        execute_learn_potion_effective(state, entity_name, enemy_name);
+                        return 1;
+                    }
                 }
 
+                return 0;
             }
         }
         
@@ -203,12 +249,17 @@ static int execute_line(GameState *state, const char *line) {
 
             // check whether it is "...fights <E> for <n> gold" line
             if ( !(token_count >= 6 && strcmp(tokens[token_count - 1], "gold") == 0 && strcmp(tokens[token_count - 3], "for") == 0) ) {
-                char enemy_name[MAX_LINE_LENGTH];
-                extract_name(tokens, 2, token_count - 1, enemy_name);
+                
+                if (is_valid_name(tokens, spaces_before, 2, token_count - 1)) {
+                    char enemy_name[MAX_LINE_LENGTH];
+                    extract_name(tokens, 2, token_count - 1, enemy_name);
 
-                execute_fight_enemy(state, enemy_name);
+                    execute_fight_enemy(state, enemy_name);
 
-                return 1;
+                    return 1;
+                }
+                
+                return 0;
             }
         }
 
@@ -220,6 +271,8 @@ static int execute_line(GameState *state, const char *line) {
                 execute_heal(state, amount);
                 return 1;
             }
+
+            return 0;
         }
 
         // o) Ironclad takes <n> damage
@@ -230,23 +283,30 @@ static int execute_line(GameState *state, const char *line) {
                 execute_take_damage(state, amount);
                 return 1;
             }
+
+            return 0;
         }
 
         // p) Ironclad discards potion <P>
         if (token_count >= 4 && strcmp(tokens[1], "discards") == 0 && strcmp(tokens[2], "potion") == 0) {
-            char potion_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 3, token_count - 1, potion_name);
-    
-            execute_discard_potion(state, potion_name);
 
-            return 1;
+            if (is_valid_name(tokens, spaces_before, 3, token_count - 1)) {
+                char potion_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 1, potion_name);
+        
+                execute_discard_potion(state, potion_name);
+
+                return 1;
+            }
+            
+            return 0;
         }
 
         // r) Ironclad sells card <C> for <n> gold
         if (token_count >= 7 && strcmp(tokens[1], "sells") == 0 && strcmp(tokens[2], "card") == 0 && 
             strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
             
-            if (is_valid_positive_integer(tokens[token_count - 2])) {
+            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 3, token_count - 4)) {
                 int price = atoi(tokens[token_count - 2]);
                 char card_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 3, token_count - 4, card_name);
@@ -255,13 +315,15 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         }
 
         // s) Ironclad sells upgraded card <C> for <n> gold
         if (token_count >= 8 && strcmp(tokens[1], "sells") == 0 && strcmp(tokens[2], "upgraded") == 0 && strcmp(tokens[3], "card") == 0 &&
             strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
             
-            if (is_valid_positive_integer(tokens[token_count - 2])) {
+            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 4, token_count - 4)) {
                 int price = atoi(tokens[token_count - 2]);
                 char card_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 4, token_count - 4, card_name);
@@ -270,13 +332,15 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         }
 
         // t) Ironclad sells potion <P> for <n> gold
         if (token_count >= 7 && strcmp(tokens[1], "sells") == 0 && strcmp(tokens[2], "potion") == 0 &&
             strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
             
-            if (is_valid_positive_integer(tokens[token_count - 2])) {
+            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 3, token_count - 4)) {
                 int price = atoi(tokens[token_count - 2]);
                 char potion_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 3, token_count - 4, potion_name);
@@ -285,25 +349,31 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         }        
 
         // u) Ironclad marks card <C> as exhaust
         if (token_count >= 6 && strcmp(tokens[1], "marks") == 0 && strcmp(tokens[2], "card") == 0 &&
             strcmp(tokens[token_count - 2], "as") == 0 && strcmp(tokens[token_count - 1], "exhaust") == 0) {
 
-            char card_name[MAX_LINE_LENGTH];
-            extract_name(tokens, 3, token_count - 3, card_name);
+            if (is_valid_name(tokens, spaces_before, 3, token_count - 3)) {
+                char card_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 3, card_name);
 
-            execute_mark_exhaust(state, card_name);
+                execute_mark_exhaust(state, card_name);
 
-            return 1;
+                return 1;
+            }
+            
+            return 0;
         } 
 
         // v) Ironclad fights <E> for <n> gold
         if (token_count >= 6 && strcmp(tokens[1], "fights") == 0 && strcmp(tokens[token_count - 3], "for") == 0 && 
             strcmp(tokens[token_count - 1], "gold") == 0) {
             
-            if (is_valid_positive_integer(tokens[token_count - 2])) {
+            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 2, token_count - 4)) {
                 int bounty = atoi(tokens[token_count - 2]);
                 char enemy_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 2, token_count - 4, enemy_name);
@@ -312,6 +382,8 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         }        
 
         // y) Ironclad gains <n> max hp
@@ -325,6 +397,8 @@ static int execute_line(GameState *state, const char *line) {
 
                 return 1;
             }
+
+            return 0;
         } 
 
     }
@@ -403,8 +477,8 @@ static int execute_line(GameState *state, const char *line) {
 
     }
     // IT WILL BE REMOVED ***********************
-    (void)state;
-    (void)line;
+    //(void)state;
+    //(void)line;
 
     /*
      * Implement the Spring 2026 "spireslayer" grammar here.
@@ -415,7 +489,7 @@ static int execute_line(GameState *state, const char *line) {
      * 3. Apply semantic checks and print the required response.
      * 4. Return 1 after printing any non-INVALID response.
      */
-    return 0;
+    //return 0;
     // UNTIL HERE ***********************
 
     return 0;
