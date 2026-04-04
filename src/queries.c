@@ -59,9 +59,48 @@ void execute_deck_query(GameState *state) {
 
 }
 
-// Function: 
+// Function: Relics ?
 void execute_relics_query(GameState *state) {
+    
+    // If no relics are owned print "None"
+    if (state->relic_count == 0) {
+        printf("None\n");
+        return;
+    }
 
+    // Create a temporary array to hold the names for sorting
+    char sorted_names[MAX_TOKENS][MAX_LINE_LENGTH];
+    
+    // Copy the original names from the state into temporary array
+    for (int i = 0; i < state->relic_count; i++) {
+        strcpy(sorted_names[i], state->relics[i].name); 
+    }
+
+    // Sort the array with simple Bubble sort
+    for (int i = 0; i < state->relic_count - 1; i++) {
+        for (int j = i + 1; j < state->relic_count; j++) {
+            
+            // If the first string is alphabetically greater than the second string
+            if (strcmp(sorted_names[i], sorted_names[j]) > 0) {
+                // Swap them using a temporary string variable
+                char temp[MAX_LINE_LENGTH];
+                strcpy(temp, sorted_names[i]);
+                strcpy(sorted_names[i], sorted_names[j]);
+                strcpy(sorted_names[j], temp);
+            }
+        }
+    }
+
+    // Print names separated by ", "
+    for (int i = 0; i < state->relic_count; i++) {
+        printf("%s", sorted_names[i]);
+        
+        if (i < state->relic_count - 1) {
+            printf(", ");
+        }
+    }
+    
+    printf("\n");
 }
 
 // Function: 
