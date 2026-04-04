@@ -20,14 +20,38 @@ void execute_where_query(GameState *state) {
     printf("%s\n", state->current_room);
 }
 
-// Function: 
+// Function: Total card
 void execute_total_card_query(GameState *state, const char *card_name) {
-
+    int total = 0;
+    
+    // Iterate through deck
+    for (int i = 0; i < state->deck_count; i++) {
+        
+        // Increment the counter
+        if (strcmp(state->deck[i].name, card_name) == 0) {
+            total++; 
+        }
+    }
+    
+    // Print the total amount
+    printf("%d\n", total);
 }
 
 // Function: 
 void execute_total_upgraded_card_query(GameState *state, const char *card_name) {
-
+    int total_upgraded = 0;
+    
+    // Iterate through deck
+    for (int i = 0; i < state->deck_count; i++) {
+        
+        // If the name matches and its 'is_upgraded' flag is active
+        if (strcmp(state->deck[i].name, card_name) == 0 && state->deck[i].is_upgraded > 0) {
+            total_upgraded++;
+        }
+    }
+    
+    // Print the upgraded amount
+    printf("%d\n", total_upgraded);
 }
 
 // Function: 
@@ -72,14 +96,7 @@ void execute_health_query(GameState *state) {
 
 // Function: Deck size
 void execute_deck_size_query(GameState *state) {
-    int total_cards = 0;
-    
-    // Go through the deck and add the cards
-    for (int i = 0; i < state->deck_count; i++) {
-        total_cards += state->deck[i].base_count + state->deck[i].is_upgraded;
-    }
-    
-    printf("%d\n", total_cards);
+    printf("%d\n", state->deck_count);
 }
 
 // Function: 

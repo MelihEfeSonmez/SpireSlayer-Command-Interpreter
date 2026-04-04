@@ -426,8 +426,32 @@ static int execute_line(GameState *state, const char *line) {
         }
 
         // d) Total card <card> ?
+        if (token_count >= 4 && strcmp(tokens[0], "Total") == 0 && strcmp(tokens[1], "card") == 0) {
+            
+            // Card name starts at index 2 and ends before ?
+            if (is_valid_name(tokens, spaces_before, 2, token_count - 2)) {
+                
+                char card_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 2, token_count - 2, card_name);
+                
+                execute_total_card_query(state, card_name);
+                return 1;
+            }
+        }
 
         // e) Total upgraded card <card> ?
+        if (token_count >= 5 && strcmp(tokens[0], "Total") == 0 && strcmp(tokens[1], "upgraded") == 0 && strcmp(tokens[2], "card") == 0) {
+            
+            // Card name starts at index 3 and ends before ?
+            if (is_valid_name(tokens, spaces_before, 3, token_count - 2)) {
+                
+                char card_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 3, token_count - 2, card_name);
+                
+                execute_total_upgraded_card_query(state, card_name);
+                return 1;
+            }
+        }
 
         // f) Deck ?
 
