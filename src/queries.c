@@ -103,9 +103,68 @@ void execute_relics_query(GameState *state) {
     printf("\n");
 }
 
-// Function: 
+// Function: Potions ?
 void execute_potions_query(GameState *state) {
+    
+    if (state->potion_count == 0) {
+        printf("None\n");
+        return;
+    }
 
+    // Create a temporary structure to hold quantities
+    typedef struct {
+        char name[MAX_LINE_LENGTH];
+        int count;
+    } UniquePotion;
+
+    UniquePotion unique_potions[MAX_TOKENS];
+    int unique_count = 0;
+
+    // Group the potions from the state
+    for (int i = 0; i < state->potion_count; i++) {
+        int found = 0;
+        
+        // Check if we already added this potion to our unique list
+        for (int j = 0; j < unique_count; j++) {
+            if (strcmp(unique_potions[j].name, state->potions[i].name) == 0) {
+                unique_potions[j].count++; // Increase the counter
+                found = 1;
+                break;
+            }
+        }
+        
+        // New potion type add it to the unique list with count 1
+        if (!found) {
+            strcpy(unique_potions[unique_count].name, state->potions[i].name);
+            unique_potions[unique_count].count = 1;
+            unique_count++;
+        }
+    }
+
+    // Sort the list with Bubble sort
+    for (int i = 0; i < unique_count - 1; i++) {
+        for (int j = i + 1; j < unique_count; j++) {
+            
+            // If the first string is alphabetically greater than the second
+            if (strcmp(unique_potions[i].name, unique_potions[j].name) > 0) {
+                // Swap the entire struct (both name and count)
+                UniquePotion temp = unique_potions[i];
+                unique_potions[i] = unique_potions[j];
+                unique_potions[j] = temp;
+            }
+        }
+    }
+
+    // SPrint the sorted output in "<count> <name>" format
+    for (int i = 0; i < unique_count; i++) {
+        printf("%d %s", unique_potions[i].count, unique_potions[i].name);
+        
+        if (i < unique_count - 1) {
+            printf(", ");
+        }
+    }
+    
+    printf("\n");
 }
 
 // Function: 
