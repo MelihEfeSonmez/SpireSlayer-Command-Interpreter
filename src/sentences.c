@@ -98,7 +98,8 @@ void execute_gain_potion(GameState *state, const char *potion_name) {
 void execute_buy_card(GameState *state, const char *card_name, int price) {
     // 1) check gold
     if (state->gold < price) { 
-        printf("Not enough gold\n");
+        printf(",Not enough gold\n");
+        return;
     }
 
     // 3) deduct gold and apply gain
@@ -118,6 +119,7 @@ void execute_buy_relic(GameState *state, const char *relic_name, int price) {
     // 1) check gold
     if (state->gold < price) {
         printf("Not enough gold\n");
+        return;
     }
 
     // 2) check contraints
@@ -142,6 +144,7 @@ void execute_buy_potion(GameState *state, const char *potion_name, int price) {
     // 1) check gold
     if (state->gold < price) {
         printf("Not enough gold\n");
+        return;
     }
 
     // 2) check contraints
@@ -445,9 +448,9 @@ void execute_take_damage(GameState *state, int amount) {
 void execute_discard_potion(GameState *state, const char *potion_name) {
     for (int i = 0; i < state->potion_count; i++) {
         
-        if (strcmp(state->potions[i].name, potion_name)) {
+        if (strcmp(state->potions[i].name, potion_name) == 0) {
             remove_potion(state, i);
-            state->potions--;
+            state->potion_count--;
 
             printf("Potion discarded: %s\n", potion_name);
             return;
