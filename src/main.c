@@ -361,9 +361,22 @@ static int execute_line(GameState *state, const char *line) {
         
         // h) Potions ?
 
-        // i) What is effective against <enemy> ? ?
+        // i) What is effective against <enemy> ?
 
         // j) Defeated <enemy> ?
+        if (token_count >= 3 && strcmp(tokens[0], "Defeated") == 0) {
+            
+            if (is_valid_name(tokens, spaces_before, 1, token_count - 2)) {
+                
+                char enemy_name[MAX_LINE_LENGTH]; 
+                extract_name(tokens, 1, token_count - 2, enemy_name);
+                
+                // Call function to print the result
+                execute_defeated_query(state, enemy_name);
+                
+                return 1;
+            }
+        }
 
         // k) Health ?
         if (token_count == 2 && strcmp(tokens[0], "Health") == 0) {
@@ -378,6 +391,13 @@ static int execute_line(GameState *state, const char *line) {
         }
         
         // m) Exhausts ?
+        if (token_count == 2 && strcmp(tokens[0], "Exhausts") == 0) {
+            
+            // Call function to print the total exhausted cards
+            execute_exhausts_query(state);
+            
+            return 1;
+        }
 
 
 

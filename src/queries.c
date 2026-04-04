@@ -52,18 +52,16 @@ void execute_effective_query(GameState *state, const char *enemy_name) {
 
 // Funciton: 
 void execute_defeated_query(GameState *state, const char *enemy_name) {
-    int defeat_count = 0; // 1. Başlangıç durumu
+    int defeat_count = 0; // Initial value
     
-    // 2. Log dizisinde gezinme
     for (int i = 0; i < state->defeated_count; i++) {
-        // 3. İsimleri karşılaştırma
+        // Comparing names
         if (strcmp(state->defeated_log[i].enemy, enemy_name) == 0) {
-            defeat_count = state->defeated_log[i].count; // Eşleşme bulundu
-            break; // 4. Döngüyü kırma
+            defeat_count = state->defeated_log[i].count; // Find mathces
+            break;
         }
     }
     
-    // 5. Sonucu yazdırma
     printf("%d\n", defeat_count);
 }
 
@@ -76,7 +74,7 @@ void execute_health_query(GameState *state) {
 void execute_deck_size_query(GameState *state) {
     int total_cards = 0;
     
-    // Desteyi dön ve her bir kartın base ve upgraded sayılarını toplama ekle
+    // Go through the deck and add the cards
     for (int i = 0; i < state->deck_count; i++) {
         total_cards += state->deck[i].base_count + state->deck[i].upgraded_count;
     }
