@@ -6,7 +6,7 @@
 // ---FUNCTIONS---
 
 // Function: initialize the game state with starting conditions
-static void init_game_state(GameState *state) {
+void init_game_state(GameState *state) {
     state->gold = 0;
     state->current_hp = 80;
     state->max_hp = 80;

@@ -66,7 +66,7 @@ void execute_gain_card(GameState *state, const char *card_name) {
 // Function: If the relic is not yet owned, add it. If already owned, nothing changes.
 void execute_gain_relic(GameState *state, const char *relic_name) {
     
-    for (size_t i = 0; i < state->relic_count; i++) {
+    for (int i = 0; i < state->relic_count; i++) {
 
         if (strcmp(state->relics[i].name, relic_name) == 0) {
             printf("Already has relic: %s\n", relic_name);            
