@@ -54,9 +54,100 @@ void execute_total_upgraded_card_query(GameState *state, const char *card_name) 
     printf("%d\n", total_upgraded);
 }
 
-// Function: 
+// Function: f) Deck ?
 void execute_deck_query(GameState *state) {
+    
+    if (state->deck_count == 0) {
+        printf("None\n");
+        return;
+    }
 
+    // Temporary structure to hold unique cards
+    typedef struct {
+        char name[MAX_LINE_LENGTH];
+        int count;
+        int is_upgraded;
+        int is_exhaust;
+    } UniqueCard;
+
+    UniqueCard unique_cards[MAX_TOKENS];
+    int unique_count = 0;
+
+    // Group the cards from the deck
+    for (int i = 0; i < state->deck_count; i++) {
+        int found = 0;
+        
+        // Check if we already have this exact card variant
+        for (int j = 0; j < unique_count; j++) {
+            
+            // To be the same, the base name and upgrade status must match
+            int current_upgrade_status = (state->deck[i].is_upgraded > 0) ? 1 : 0;
+            
+            if (strcmp(unique_cards[j].name, state->deck[i].name) == 0 && unique_cards[j].is_upgraded == current_upgrade_status) {
+                unique_cards[j].count++;
+                found = 1;
+                break;
+            }
+        }
+        
+        // If it's a new card variant, add it to unique list
+        if (!found) {
+            strcpy(unique_cards[unique_count].name, state->deck[i].name);
+            unique_cards[unique_count].count = 1;
+            unique_cards[unique_count].is_upgraded = (state->deck[i].is_upgraded > 0) ? 1 : 0;
+            unique_cards[unique_count].is_exhaust = state->deck[i].is_exhaust;
+            unique_count++;
+        }
+    }
+
+    // Sort the list with Bubble sort with two conditions
+    for (int i = 0; i < unique_count - 1; i++) {
+        for (int j = i + 1; j < unique_count; j++) {
+            
+            int should_swap = 0;
+            int name_comparison = strcmp(unique_cards[i].name, unique_cards[j].name);
+            
+            // Lexicographic by base card name
+            if (name_comparison > 0) {
+                should_swap = 1;
+            } 
+            // Same base name, but base version comes before upgraded version
+            else if (name_comparison == 0) {
+                if (unique_cards[i].is_upgraded > unique_cards[j].is_upgraded) {
+                    should_swap = 1; // i is upgraded (1), j is base (0)
+                }
+            }
+
+            // Perform the swap if needed
+            if (should_swap) {
+                UniqueCard temp = unique_cards[i];
+                unique_cards[i] = unique_cards[j];
+                unique_cards[j] = temp;
+            }
+        }
+    }
+
+    // Print the results with suffixes
+    for (int i = 0; i < unique_count; i++) {
+        
+        // Build the suffix string
+        char suffix[3] = "";
+        if (unique_cards[i].is_upgraded == 1) {
+            strcat(suffix, "+");
+        }
+        if (unique_cards[i].is_exhaust == 1) {
+            strcat(suffix, "*");
+        }
+
+        // Print the output format: <count> <name>[suffixes]
+        printf("%d %s%s", unique_cards[i].count, unique_cards[i].name, suffix);
+        
+        if (i < unique_count - 1) {
+            printf(", ");
+        }
+    }
+    
+    printf("\n");
 }
 
 // Function: Relics ?

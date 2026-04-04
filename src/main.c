@@ -454,6 +454,10 @@ static int execute_line(GameState *state, const char *line) {
         }
 
         // f) Deck ?
+        if (token_count == 2 && strcmp(tokens[0], "Deck") == 0) {
+            execute_deck_query(state);
+            return 1;
+        }
 
         // g) Relics ?
         if (token_count == 2 && strcmp(tokens[0], "Relics") == 0) {
