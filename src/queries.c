@@ -167,9 +167,58 @@ void execute_potions_query(GameState *state) {
     printf("\n");
 }
 
-// Function: 
+// Function: i) What is effective against <enemy> ?
 void execute_effective_query(GameState *state, const char *enemy_name) {
-
+    int codex_index = -1;
+    
+    // Find the enemy in the codex
+    for (int i = 0; i < state->codex_count; i++) {
+        if (strcmp(state->codex[i].enemy, enemy_name) == 0) {
+            codex_index = i;
+            break; // Enemy found save the index
+        }
+    }
+    
+    // If no codex entry exists for this enemy
+    if (codex_index == -1) {
+        printf("No codex data for %s\n", enemy_name);
+        return;
+    }
+    
+    int num_counters = state->codex[codex_index].counter_count;
+    
+    // Create a temporary array to hold "<type> <name>"
+    char sorted_strings[MAX_TOKENS][MAX_LINE_LENGTH];
+    
+    // Build the full printed strings
+    for (int i = 0; i < num_counters; i++) {
+        sprintf(sorted_strings[i], "%s %s", state->codex[codex_index].counters[i].type, state->codex[codex_index].counters[i].name);
+    }
+    
+    // Sort the strings using Bubble sort
+    for (int i = 0; i < num_counters - 1; i++) {
+        for (int j = i + 1; j < num_counters; j++) {
+            
+            // Compare the constructed strings
+            if (strcmp(sorted_strings[i], sorted_strings[j]) > 0) {
+                char temp[MAX_LINE_LENGTH];
+                strcpy(temp, sorted_strings[i]);
+                strcpy(sorted_strings[i], sorted_strings[j]);
+                strcpy(sorted_strings[j], temp);
+            }
+        }
+    }
+    
+    // Print the sorted counters separated by ", "
+    for (int i = 0; i < num_counters; i++) {
+        printf("%s", sorted_strings[i]);
+        
+        if (i < num_counters - 1) {
+            printf(", ");
+        }
+    }
+    
+    printf("\n");
 }
 
 // Function: 

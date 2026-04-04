@@ -468,6 +468,20 @@ static int execute_line(GameState *state, const char *line) {
         }
 
         // i) What is effective against <enemy> ?
+        if (token_count >= 6 && strcmp(tokens[0], "What") == 0 && strcmp(tokens[1], "is") == 0 && 
+            strcmp(tokens[2], "effective") == 0 && strcmp(tokens[3], "against") == 0) {
+            
+            // Enemy name starts at index 4 and ends before the '?'
+            if (is_valid_name(tokens, spaces_before, 4, token_count - 2)) {
+                
+                char enemy_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 4, token_count - 2, enemy_name);
+                
+                execute_effective_query(state, enemy_name);
+                
+                return 1;
+            }
+        }
 
         // j) Defeated <enemy> ?
         if (token_count >= 3 && strcmp(tokens[0], "Defeated") == 0) {
