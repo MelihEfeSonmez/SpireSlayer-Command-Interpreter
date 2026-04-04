@@ -249,7 +249,7 @@ void learn_effective_helper(GameState *state, const char *type, const char *enti
 
         strcpy(state->codex[enemy_index].counters[0].type, type);
         strcpy(state->codex[enemy_index].counters[0].name, entity_name);
-        state-> codex[enemy_index].counter_count;
+        state->codex[enemy_index].counter_count++;
         state->codex_count++;
 
         printf("Codex entry created: %s\n", enemy_name);
@@ -259,7 +259,7 @@ void learn_effective_helper(GameState *state, const char *type, const char *enti
         for (int i = 0; i < state->codex[enemy_index].counter_count; i++) {
 
             // Duplicate typed counters are silently ignored (no statechange).
-            if (strcmp(state->codex[enemy_index].counters[i].type, type) == 0 && state->codex[enemy_index].counters[i].name, entity_name) {
+            if (strcmp(state->codex[enemy_index].counters[i].type, type) == 0 && strcmp(state->codex[enemy_index].counters[i].name, entity_name) == 0) {
                 printf("Effectiveness already noted\n");
                 break;
             }
@@ -356,7 +356,7 @@ void execute_fight_enemy(GameState *state, const char *enemy_name) {
                             state->potions[j] = state->potions[j + 1];
                         }
                         
-                        state->potion_capacity--;
+                        state->potion_count--;
                         break;
                     }
                 }
