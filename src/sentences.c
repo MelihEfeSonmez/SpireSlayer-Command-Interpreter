@@ -49,7 +49,7 @@ int check_if_exhaust(GameState *state, const char *card_name) {
 // Function: Increase total gold by the specified amount. 
 void execute_gain_gold(GameState *state, int amount) {
     state->gold += amount;
-    printf("Gold obtained");
+    printf("» Gold obtained\n");
 }
 
 // Function: One base copy of the named card is added to the deck.
@@ -60,7 +60,7 @@ void execute_gain_card(GameState *state, const char *card_name) {
     state->deck[state->deck_count].is_exhaust = check_if_exhaust(state, card_name);
     state->deck_count++;
 
-    printf("Card added: %s\n", card_name);
+    printf("» Card added: %s\n", card_name);
 }
 
 // Function: If the relic is not yet owned, add it. If already owned, nothing changes.
@@ -69,7 +69,7 @@ void execute_gain_relic(GameState *state, const char *relic_name) {
     for (int i = 0; i < state->relic_count; i++) {
 
         if (strcmp(state->relics[i].name, relic_name) == 0) {
-            printf("Already has relic: %s\n", relic_name);            
+            printf("» Already has relic: %s\n", relic_name);            
             return;
         }
     }
@@ -77,28 +77,28 @@ void execute_gain_relic(GameState *state, const char *relic_name) {
     strcpy(state->relics[state->relic_count].name, relic_name);
     state->relic_count++;
 
-    printf("Relic obtained: %s\n", relic_name);
+    printf("» Relic obtained: %s\n", relic_name);
 }
 
 // Function: If the belt has room, add one copy. Otherwise, refuse.
 void execute_gain_potion(GameState *state, const char *potion_name) {
     
     if (state->potion_count >= 3 ) {
-        printf("Potion belt is full\n");
+        printf("» Potion belt is full\n");
         return;
     }
 
     strcpy(state->potions[state->potion_count].name, potion_name);
     state->potion_count++;
 
-    printf("Potion obtained: %s\n", potion_name);
+    printf("» Potion obtained: %s\n", potion_name);
 }
 
 // Function: Deduct gold and apply the gain by considering "evaluation order".
 void execute_buy_card(GameState *state, const char *card_name, int price) {
     // 1) check gold
     if (state->gold < price) { 
-        printf(",Not enough gold\n");
+        printf("» Not enough gold\n");
         return;
     }
 
@@ -111,21 +111,21 @@ void execute_buy_card(GameState *state, const char *card_name, int price) {
     state->deck[state->deck_count].is_exhaust = check_if_exhaust(state, card_name);
     state->deck_count++;
 
-    printf("Card added: %s\n", card_name);
+    printf("» Card added: %s\n", card_name);
 }
 
 // Function: Deduct gold and apply the gain. Print the corresponding gain output.
 void execute_buy_relic(GameState *state, const char *relic_name, int price) {
     // 1) check gold
     if (state->gold < price) {
-        printf("Not enough gold\n");
+        printf("» Not enough gold\n");
         return;
     }
 
     // 2) check contraints
     for (int i = 0; i < state->relic_count; i++) {
         if (strcmp(state->relics[i].name, relic_name) == 0) {
-            printf("Already has relic: %s\n", relic_name);
+            printf("» Already has relic: %s\n", relic_name);
             return;
         }
     }
@@ -136,20 +136,20 @@ void execute_buy_relic(GameState *state, const char *relic_name, int price) {
     strcpy(state->relics[state->relic_count].name, relic_name);
     state->relic_count++;
 
-    printf("Relic obtained: %s\n", relic_name);
+    printf("» Relic obtained: %s\n", relic_name);
 }
 
 // Function: Deduct gold and apply the gain. Print the corresponding gain output.
 void execute_buy_potion(GameState *state, const char *potion_name, int price) {
     // 1) check gold
     if (state->gold < price) {
-        printf("Not enough gold\n");
+        printf("» Not enough gold\n");
         return;
     }
 
     // 2) check contraints
     if (state->potion_count >= 3) {
-        printf("Potion belt is full\n");
+        printf("» Potion belt is full\n");
         return;
     }
 
@@ -159,7 +159,7 @@ void execute_buy_potion(GameState *state, const char *potion_name, int price) {
     strcpy(state->potions[state->potion_count].name, potion_name);
     state->potion_count++;
 
-    printf("Potion obtained: %s\n", potion_name);
+    printf("» Potion obtained: %s\n", potion_name);
 }
 
 // Function: removes one base copy, if present.
@@ -173,12 +173,12 @@ void execute_remove_card(GameState *state, const char *card_name) {
             }
             state->deck_count--;
             
-            printf("Card removed: %s\n", card_name);
+            printf("» Card removed: %s\n", card_name);
             return;
         }
     }
     
-    printf("Card not found: %s\n", card_name);
+    printf("» Card not found: %s\n", card_name);
 }
 
 // Function: removes one upgraded copy (<card>+), if present.
@@ -192,12 +192,12 @@ void execute_remove_upgraded_card(GameState *state, const char *card_name) {
             }
             state->deck_count--;
             
-            printf("upgraded card removed: %s\n", card_name);
+            printf("» upgraded card removed: %s\n", card_name);
             return;
         }
     }
     
-    printf("Card not found: %s\n", card_name);
+    printf("» Card not found: %s\n", card_name);
 }
 
 // Function: If at least one base copy is in the deck, convert one base copy into an upgraded copy. Otherwise, nothing changes.
@@ -209,7 +209,7 @@ void execute_upgrade_card(GameState *state, const char *card_name) {
             if (state->deck[i].is_upgraded == 0) {
                 state->deck[i].is_upgraded++;
 
-                printf("Card upgraded: %s\n", card_name);
+                printf("» Card upgraded: %s\n", card_name);
                 return;
 
             } else {
@@ -218,7 +218,7 @@ void execute_upgrade_card(GameState *state, const char *card_name) {
         }
     }
 
-    printf("Card not found: %s\n", card_name);
+    printf("» Card not found: %s\n", card_name);
 }
 
 // Function: Floor increments by one; current room updates to the given type.
@@ -226,7 +226,7 @@ void execute_enter_room(GameState *state, const char *room_type) {
     state->floor++;
     strcpy(state->current_room, room_type);
 
-    printf("Entered %s room\n", room_type);
+    printf("» Entered %s room\n", room_type);
 }
 
 // Helper Funciton: execute record effectiveness
@@ -252,7 +252,7 @@ void learn_effective_helper(GameState *state, const char *type, const char *enti
         state->codex[enemy_index].counter_count++;
         state->codex_count++;
 
-        printf("Codex entry created: %s\n", enemy_name);
+        printf("» Codex entry created: %s\n", enemy_name);
     
     } else if (enemy_index != -1) {
 
@@ -260,7 +260,7 @@ void learn_effective_helper(GameState *state, const char *type, const char *enti
 
             // Duplicate typed counters are silently ignored (no statechange).
             if (strcmp(state->codex[enemy_index].counters[i].type, type) == 0 && strcmp(state->codex[enemy_index].counters[i].name, entity_name) == 0) {
-                printf("Effectiveness already noted\n");
+                printf("» Effectiveness already noted\n");
                 break;
             }
         }
@@ -270,7 +270,7 @@ void learn_effective_helper(GameState *state, const char *type, const char *enti
         strcpy(state->codex[enemy_index].counters[codex_index].type, type);
         strcpy(state->codex[enemy_index].counters[codex_index].name, entity_name);
 
-        printf("Codex entry updated: %s\n", enemy_name);
+        printf("» Codex entry updated: %s\n", enemy_name);
     }
 }
 
@@ -409,7 +409,7 @@ void execute_fight_enemy(GameState *state, const char *enemy_name) {
             state->defeated_count++;
         }
 
-        printf("Ironclad defeats %s\n", enemy_name);
+        printf("» Ironclad defeats %s\n", enemy_name);
 
     // defeated effects    
     } else {
@@ -418,7 +418,7 @@ void execute_fight_enemy(GameState *state, const char *enemy_name) {
             state->current_hp = 0;
         }
         
-        printf("Ironclad is outmatched and flees with %d hp remaining\n", state->current_hp);
+        printf("» Ironclad is outmatched and flees with %d hp remaining\n", state->current_hp);
     }
 }
 
@@ -430,7 +430,7 @@ void execute_heal(GameState *state, int amount) {
         state->current_hp = state->max_hp;
     }
 
-    printf("Ironclad heals to %d\n", state->current_hp);
+    printf("» Ironclad heals to %d\n", state->current_hp);
 }
 
 // Function: Decrease current HP by the given amount. If the result would drop below 0, current HP is clamped to 0.
@@ -441,7 +441,7 @@ void execute_take_damage(GameState *state, int amount) {
         state->current_hp = 0;
     }
 
-    printf("Ironclad health drops to %d\n", state->current_hp);  
+    printf("» Ironclad health drops to %d\n", state->current_hp);  
 }
 
 // Function: If the named potion exists in the belt, remove one copy; otherwise, do nothing.
@@ -452,12 +452,12 @@ void execute_discard_potion(GameState *state, const char *potion_name) {
             remove_potion(state, i);
             state->potion_count--;
 
-            printf("Potion discarded: %s\n", potion_name);
+            printf("» Potion discarded: %s\n", potion_name);
             return;
         }
     }
 
-    printf("Potion not found: %s\n", potion_name);
+    printf("» Potion not found: %s\n", potion_name);
 }
 
 // Function: If the item (card) exists, remove it and add the given gold amount. Otherwise, nothing changes.
@@ -469,12 +469,12 @@ void execute_sell_card(GameState *state, const char *card_name, int price) {
 
             remove_card(state, i);
 
-            printf("Card sold: %s\n", card_name);
+            printf("» Card sold: %s\n", card_name);
             return;
         }
     }
     
-    printf("Card not found: %s\n", card_name);
+    printf("» Card not found: %s\n", card_name);
 }
 
 // Function: If the item (card) exists, remove it and add the given gold amount. Otherwise, nothing changes.
@@ -486,12 +486,12 @@ void execute_sell_upgraded_card(GameState *state, const char *card_name, int pri
 
             remove_card(state, i);
 
-            printf("Upgraded card sold: %s\n", card_name);
+            printf("» Upgraded card sold: %s\n", card_name);
             return;
         }
     }
     
-    printf("Upgraded card not found: %s\n", card_name);
+    printf("» Upgraded card not found: %s\n", card_name);
 }
 
 // Function: If the item (card) exists, remove it and add the given gold amount. Otherwise, nothing changes.
@@ -503,12 +503,12 @@ void execute_sell_potion(GameState *state, const char *potion_name, int price) {
 
             remove_potion(state, i);
 
-            printf("Potion sold: %s\n", potion_name);
+            printf("» Potion sold: %s\n", potion_name);
             return;
         }
     }
     
-    printf("Potion not found: %s\n", potion_name);
+    printf("» Potion not found: %s\n", potion_name);
 }
 
 // Function: Tag the given card name as exhaust. The tag is global—regardless of whether any copies currently exist in the deck.
@@ -517,7 +517,7 @@ void execute_mark_exhaust(GameState *state, const char *card_name) {
 
         if (strcmp(state->exhaust_tags[i], card_name) == 0) {
 
-            printf("Card already exhausts: %s\n", card_name);
+            printf("» Card already exhausts: %s\n", card_name);
             return;
         }
     }
@@ -531,7 +531,7 @@ void execute_mark_exhaust(GameState *state, const char *card_name) {
         }
     }
     
-    printf("Card marked as exhaust: %s\n", card_name);
+    printf("» Card marked as exhaust: %s\n", card_name);
 }
 
 // Function: Same function with execute_fight_enemy (only difference: the specified gold amount is added)
@@ -656,7 +656,7 @@ void execute_fight_enemy_bounty(GameState *state, const char *enemy_name, int re
 
         state->gold += reward; // bounty gain
 
-        printf("Ironclad defeats %s and gains %d gold\n", enemy_name, reward);
+        printf("» Ironclad defeats %s and gains %d gold\n", enemy_name, reward);
 
     // defeated effects    
     } else {
@@ -665,12 +665,12 @@ void execute_fight_enemy_bounty(GameState *state, const char *enemy_name, int re
             state->current_hp = 0;
         }
         
-        printf("Ironclad is outmatched and flees with %d hp remaining\n", state->current_hp);
+        printf("» Ironclad is outmatched and flees with %d hp remaining\n", state->current_hp);
     }    
 }
 
 // Function: Increase Max HP by the given amount.
 void execute_gain_max_hp(GameState *state, int amount) {
     state->max_hp += amount;
-    printf("Max health increased to %d\n", state->max_hp);
+    printf("» Max health increased to %d\n", state->max_hp);
 }
