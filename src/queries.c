@@ -7,17 +7,17 @@
 
 // Function: Total gold
 void execute_gold_query(GameState *state) {
-    printf("%d\n", state->gold);
+    printf("» %d\n", state->gold);
 }
 
 // Function: Floor
 void execute_floor_query(GameState *state) {
-    printf("%d\n", state->floor);
+    printf("» %d\n", state->floor);
 }
 
 // Function: Where
 void execute_where_query(GameState *state) {
-    printf("%s\n", state->current_room);
+    printf("» %s\n", state->current_room);
 }
 
 // Function: Total card
@@ -34,7 +34,7 @@ void execute_total_card_query(GameState *state, const char *card_name) {
     }
     
     // Print the total amount
-    printf("%d\n", total);
+    printf("» %d\n", total);
 }
 
 // Function: 
@@ -51,14 +51,14 @@ void execute_total_upgraded_card_query(GameState *state, const char *card_name) 
     }
     
     // Print the upgraded amount
-    printf("%d\n", total_upgraded);
+    printf("» %d\n", total_upgraded);
 }
 
 // Function: f) Deck ?
 void execute_deck_query(GameState *state) {
     
     if (state->deck_count == 0) {
-        printf("None\n");
+        printf("» None\n");
         return;
     }
 
@@ -128,6 +128,7 @@ void execute_deck_query(GameState *state) {
     }
 
     // Print the results with suffixes
+    printf("» ");
     for (int i = 0; i < unique_count; i++) {
         
         // Build the suffix string
@@ -155,7 +156,7 @@ void execute_relics_query(GameState *state) {
     
     // If no relics are owned print "None"
     if (state->relic_count == 0) {
-        printf("None\n");
+        printf("» None\n");
         return;
     }
 
@@ -183,6 +184,7 @@ void execute_relics_query(GameState *state) {
     }
 
     // Print names separated by ", "
+    printf("» ");
     for (int i = 0; i < state->relic_count; i++) {
         printf("%s", sorted_names[i]);
         
@@ -198,7 +200,7 @@ void execute_relics_query(GameState *state) {
 void execute_potions_query(GameState *state) {
     
     if (state->potion_count == 0) {
-        printf("None\n");
+        printf("» None\n");
         return;
     }
 
@@ -246,7 +248,8 @@ void execute_potions_query(GameState *state) {
         }
     }
 
-    // SPrint the sorted output in "<count> <name>" format
+    // Print the sorted output in "<count> <name>"
+    printf("» ");
     for (int i = 0; i < unique_count; i++) {
         printf("%d %s", unique_potions[i].count, unique_potions[i].name);
         
@@ -272,7 +275,7 @@ void execute_effective_query(GameState *state, const char *enemy_name) {
     
     // If no codex entry exists for this enemy
     if (codex_index == -1) {
-        printf("No codex data for %s\n", enemy_name);
+        printf("» No codex data for %s\n", enemy_name);
         return;
     }
     
@@ -301,6 +304,7 @@ void execute_effective_query(GameState *state, const char *enemy_name) {
     }
     
     // Print the sorted counters separated by ", "
+    printf("» ");
     for (int i = 0; i < num_counters; i++) {
         printf("%s", sorted_strings[i]);
         
@@ -324,17 +328,17 @@ void execute_defeated_query(GameState *state, const char *enemy_name) {
         }
     }
     
-    printf("%d\n", defeat_count);
+    printf("» %d\n", defeat_count);
 }
 
 // Function: Health
 void execute_health_query(GameState *state) {
-    printf("%d/%d\n", state->current_hp, state->max_hp);
+    printf("» %d/%d\n", state->current_hp, state->max_hp);
 }
 
 // Function: Deck size
 void execute_deck_size_query(GameState *state) {
-    printf("%d\n", state->deck_count);
+    printf("» %d\n", state->deck_count);
 }
 
 // Function: 
@@ -342,7 +346,7 @@ void execute_exhausts_query(GameState *state) {
     
     // If no cards are tagged as exhaust print "None"
     if (state->exhaust_count == 0) {
-        printf("None\n");
+        printf("» None\n");
         return;
     }
 
@@ -371,6 +375,7 @@ void execute_exhausts_query(GameState *state) {
     }
 
     // Print the sorted names separated by ", "
+    printf("» ");
     for (int i = 0; i < state->exhaust_count; i++) {
         printf("%s", sorted_names[i]);
         
