@@ -193,7 +193,7 @@ static int execute_line(GameState *state, const char *line) {
         }
 
         // k) Ironclad enters <room> room
-        if (token_count >= 4 && strcmp(tokens[1], "enters") == 0 && strcmp(tokens[3], "room") == 0) {
+        if (token_count == 4 && strcmp(tokens[1], "enters") == 0 && strcmp(tokens[3], "room") == 0) {
               
             const char *room_types[] = {"Monster", "Elite", "Rest", "Shop", "Treasure", "Event", "Boss"};
             int num_room_types = sizeof(room_types) / sizeof(room_types[0]);
