@@ -572,7 +572,7 @@ int main(void) {
         // try to parse and execute the command line 
         // if fails, print "INVALID"
         if (!execute_line(&state, line)) {
-            printf("INVALID\n");
+            printf("» INVALID\n");
         }
     }
 
