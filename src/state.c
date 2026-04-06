@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stddef.h>
 
-// ---FUNCTIONS---
-
 // Function: initialize the game state with starting conditions
 void init_game_state(GameState *state) {
     state->gold = 0;
@@ -14,27 +12,32 @@ void init_game_state(GameState *state) {
     strcpy(state->current_room, "NONE");
 
     // deck
-    state->deck = NULL;
+    state->deck_capacity = 10;
+    state->deck = malloc(state->deck_capacity * sizeof(CardEntry));
     state->deck_count = 0;
-    state->deck_capacity = 0;
+
     // relics
-    state->relics = NULL;
+    state->relic_capacity = 10;
+    state->relics = malloc(state->relic_capacity * sizeof(RelicEntry));
     state->relic_count = 0;
-    state->relic_capacity = 0;
+
     // potions
-    state->potions = NULL;
+    state->potion_capacity = 3;
+    state->potions = malloc(state->potion_capacity * sizeof(PotionEntry));
     state->potion_count = 0;
-    state->potion_capacity = 0;
+
     // codex
-    state->codex = NULL;
+    state->codex_capacity = 10;
+    state->codex = malloc(state->codex_capacity * sizeof(CodexEntry));
     state->codex_count = 0;
-    state->codex_capacity = 0;
+
     // defeated_log
-    state->defeated_log = NULL;
+    state->defeated_capacity = 10;
+    state->defeated_log = malloc(state->defeated_capacity * sizeof(DefeatedEntry));
     state->defeated_count = 0;
-    state->defeated_capacity = 0;
+
     // exhaust_tags
-    state->exhaust_tags = NULL;
+    state->exhaust_capacity = 10;
+    state->exhaust_tags = malloc(state->exhaust_capacity * sizeof(char*));
     state->exhaust_count = 0;
-    state->exhaust_capacity = 0;
 }
