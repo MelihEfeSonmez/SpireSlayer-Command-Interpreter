@@ -193,9 +193,20 @@ static int execute_line(GameState *state, const char *line) {
         }
 
         // k) Ironclad enters <room> room
-        if (token_count >= 4 && strcmp(tokens[1], "enters") == 0 && strcmp(tokens[token_count - 1], "room") == 0) {
+        if (token_count >= 4 && strcmp(tokens[1], "enters") == 0 && strcmp(tokens[3], "room") == 0) {
               
-            if (is_valid_name(tokens, spaces_before, 2, token_count - 2)) {
+            const char *room_types[] = {"Monster", "Elite", "Rest", "Shop", "Treasure", "Event", "Boss"};
+            int num_room_types = sizeof(room_types) / sizeof(room_types[0]);
+            int is_valid_room = 0;
+
+            for (int i = 0; i < num_room_types; i++) {
+                if (strcmp(tokens[2], room_types[i]) == 0) {
+                    is_valid_room = 1;
+                    break;
+                }
+            }
+
+            if (is_valid_room) {
                 char room_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 2, token_count - 2, room_name);
 
@@ -244,6 +255,23 @@ static int execute_line(GameState *state, const char *line) {
             }
         }
         
+        // v) Ironclad fights <E> for <n> gold
+        if (token_count >= 6 && strcmp(tokens[1], "fights") == 0 && strcmp(tokens[token_count - 3], "for") == 0 && 
+            strcmp(tokens[token_count - 1], "gold") == 0) {
+            
+            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 2, token_count - 4)) {
+                int bounty = atoi(tokens[token_count - 2]);
+                char enemy_name[MAX_LINE_LENGTH];
+                extract_name(tokens, 2, token_count - 4, enemy_name);
+
+                execute_fight_enemy_bounty(state, enemy_name, bounty);
+
+                return 1;
+            }
+
+            return 0;
+        }  
+
         // m) Ironclad fights <E>
         if (token_count >= 3 && strcmp(tokens[1], "fights") == 0) {
 
@@ -367,24 +395,7 @@ static int execute_line(GameState *state, const char *line) {
             }
             
             return 0;
-        } 
-
-        // v) Ironclad fights <E> for <n> gold
-        if (token_count >= 6 && strcmp(tokens[1], "fights") == 0 && strcmp(tokens[token_count - 3], "for") == 0 && 
-            strcmp(tokens[token_count - 1], "gold") == 0) {
-            
-            if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 2, token_count - 4)) {
-                int bounty = atoi(tokens[token_count - 2]);
-                char enemy_name[MAX_LINE_LENGTH];
-                extract_name(tokens, 2, token_count - 4, enemy_name);
-
-                execute_fight_enemy_bounty(state, enemy_name, bounty);
-
-                return 1;
-            }
-
-            return 0;
-        }        
+        }       
 
         // y) Ironclad gains <n> max hp
         if (token_count == 5 && strcmp(tokens[1], "gains") == 0 && strcmp(tokens[3], "max") == 0 && 
