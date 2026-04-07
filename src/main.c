@@ -19,7 +19,7 @@ static void chomp_newline(char *line) {
     }
 }
 
-// Function: parse and execute the command line
+// Function: parse and execute the command line (valid -> return 1, invalid -> return 0) 
 static int execute_line(GameState *state, const char *line) {
     char tokens[MAX_TOKENS][MAX_LINE_LENGTH];
     int spaces_before[MAX_TOKENS];
@@ -100,7 +100,7 @@ static int execute_line(GameState *state, const char *line) {
             strcmp(tokens[token_count - 3], "for") == 0 && strcmp(tokens[token_count - 1], "gold") == 0) {
             
             if (is_valid_positive_integer(tokens[token_count - 2]) && is_valid_name(tokens, spaces_before, 3, token_count - 4)) {
-                int price = atoi(tokens[token_count - 2]);
+                int price = atoi(tokens[token_count - 2]); // ASCII to integer
                 char card_name[MAX_LINE_LENGTH];
                 extract_name(tokens, 3, token_count - 4, card_name);
 
@@ -537,21 +537,6 @@ static int execute_line(GameState *state, const char *line) {
 
 
     }
-    // IT WILL BE REMOVED ***********************
-    //(void)state;
-    //(void)line;
-
-    /*
-     * Implement the Spring 2026 "spireslayer" grammar here.
-     *
-     * A typical approach is:
-     * 1. Parse the whole line.
-     * 2. Reject malformed input by returning 0.
-     * 3. Apply semantic checks and print the required response.
-     * 4. Return 1 after printing any non-INVALID response.
-     */
-    //return 0;
-    // UNTIL HERE ***********************
 
     return 0;
 }
