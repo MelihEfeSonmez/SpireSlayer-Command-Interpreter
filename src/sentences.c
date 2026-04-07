@@ -6,11 +6,27 @@
 
 // ---GENERAL HELPER FUNCTIONS---
 
+// Helper Funciton: allocate memory and return deep copy of string
+char *my_strdup(const char *src) {
+    if (src == NULL) {
+        return NULL;
+    }
+
+    char *dst = malloc(strlen(src) + 1);
+    if (dst != NULL) {
+        strcpy(dst, src);
+    }
+
+    return dst;
+}
+
 // Helper Function: remove card by index
 void remove_card(GameState *state, int index) {
     if (index < 0 || index >= state->deck_count) {
         return;
     }
+    
+    free(state->deck[index].name);
 
     for (int i = index; i < state->deck_count - 1; i++) {
         state->deck[i] = state->deck[i + 1];
@@ -24,6 +40,8 @@ void remove_potion(GameState *state, int index) {
     if (index < 0 || index >= state->potion_count) {
         return;
     }
+    
+    free(state->potions[index].name);
 
     for (int i = index; i < state->potion_count - 1; i++) {
         state->potions[i] = state->potions[i + 1];
@@ -54,7 +72,14 @@ void execute_gain_gold(GameState *state, int amount) {
 
 // Function: One base copy of the named card is added to the deck.
 void execute_gain_card(GameState *state, const char *card_name) {
-    strcpy(state->deck[state->deck_count].name, card_name);
+    
+    // check deck capacity and realloc
+    if (state->deck_count >= state->deck_capacity) {
+        state->deck_capacity *= 2;
+        state->deck = realloc(state->deck, state->deck_capacity * sizeof(CardEntry));
+    }    
+    
+    state->deck[state->deck_count].name = my_strdup(card_name); // name by new memory allocation
 
     state->deck[state->deck_count].is_upgraded = 0;
     state->deck[state->deck_count].is_exhaust = check_if_exhaust(state, card_name);
@@ -73,8 +98,14 @@ void execute_gain_relic(GameState *state, const char *relic_name) {
             return;
         }
     }
-    
-    strcpy(state->relics[state->relic_count].name, relic_name);
+
+    // check relic capacity and realloc
+    if (state->relic_count >= state->relic_capacity) {
+        state->relic_capacity *= 2;
+        state->relics = realloc(state->relics, state->relic_capacity * sizeof(RelicEntry));
+    }
+
+    state->relics[state->relic_count].name = my_strdup(relic_name); // name by new memory allocation
     state->relic_count++;
 
     printf("» Relic obtained: %s\n", relic_name);
@@ -88,7 +119,7 @@ void execute_gain_potion(GameState *state, const char *potion_name) {
         return;
     }
 
-    strcpy(state->potions[state->potion_count].name, potion_name);
+    state->potions[state->potion_count].name = my_strdup(potion_name); // name by new memory allocation
     state->potion_count++;
 
     printf("» Potion obtained: %s\n", potion_name);
@@ -102,10 +133,16 @@ void execute_buy_card(GameState *state, const char *card_name, int price) {
         return;
     }
 
+    // check deck capacity and realloc
+    if (state->deck_count >= state->deck_capacity) {
+        state->deck_capacity *= 2;
+        state->deck = realloc(state->deck, state->deck_capacity * sizeof(CardEntry));
+    }    
+
     // 3) deduct gold and apply gain
     state->gold -= price;
 
-    strcpy(state->deck[state->deck_count].name, card_name);
+    state->deck[state->deck_count].name = my_strdup(card_name); // name by new memory allocation
 
     state->deck[state->deck_count].is_upgraded = 0; 
     state->deck[state->deck_count].is_exhaust = check_if_exhaust(state, card_name);
@@ -130,10 +167,16 @@ void execute_buy_relic(GameState *state, const char *relic_name, int price) {
         }
     }
 
+    // check relic capacity and reallco
+    if (state->relic_count >= state->relic_capacity) {
+        state->relic_capacity *= 2;
+        state->relics = realloc(state->relics, state->relic_capacity * sizeof(RelicEntry));
+    }
+
     // 3) deduct gold and apply gain
     state->gold -= price;
 
-    strcpy(state->relics[state->relic_count].name, relic_name);
+    state->relics[state->relic_count].name = my_strdup(relic_name);
     state->relic_count++;
 
     printf("» Relic obtained: %s\n", relic_name);
@@ -148,7 +191,7 @@ void execute_buy_potion(GameState *state, const char *potion_name, int price) {
     }
 
     // 2) check contraints
-    if (state->potion_count >= 3) {
+    if (state->potion_count >= state->potion_capacity) {
         printf("» Potion belt is full\n");
         return;
     }
@@ -156,7 +199,7 @@ void execute_buy_potion(GameState *state, const char *potion_name, int price) {
     // 3) deduct gold and apply gain
     state->gold -= price;
 
-    strcpy(state->potions[state->potion_count].name, potion_name);
+    state->potions[state->potion_count].name = my_strdup(potion_name);
     state->potion_count++;
 
     printf("» Potion obtained: %s\n", potion_name);
@@ -168,10 +211,7 @@ void execute_remove_card(GameState *state, const char *card_name) {
     for (int i = 0; i < state->deck_count; i++) {
         if (strcmp(state->deck[i].name, card_name) == 0 && state->deck[i].is_upgraded == 0) {
             
-            for (int j = i; j < state->deck_count - 1; j++) {
-                state->deck[j] = state->deck[j+1];
-            }
-            state->deck_count--;
+            remove_card(state, i);
             
             printf("» Card removed: %s\n", card_name);
             return;
@@ -187,10 +227,7 @@ void execute_remove_upgraded_card(GameState *state, const char *card_name) {
     for (int i = 0; i < state->deck_count; i++) {
         if (strcmp(state->deck[i].name, card_name) == 0 && state->deck[i].is_upgraded == 1) {
             
-            for (int j = i; j < state->deck_count - 1; j++) {
-                state->deck[j] = state->deck[j+1];
-            }
-            state->deck_count--;
+            remove_card(state, i);
             
             printf("» upgraded card removed: %s\n", card_name);
             return;
@@ -207,13 +244,10 @@ void execute_upgrade_card(GameState *state, const char *card_name) {
 
         if (strcmp(state->deck[i].name, card_name) == 0) {
             if (state->deck[i].is_upgraded == 0) {
-                state->deck[i].is_upgraded++;
+                state->deck[i].is_upgraded = 1;
 
                 printf("» Card upgraded: %s\n", card_name);
                 return;
-
-            } else {
-                continue;
             }
         }
     }
@@ -242,14 +276,19 @@ void learn_effective_helper(GameState *state, const char *type, const char *enti
 
     // If the enemy is new to the codex, create an entry first.
     if (enemy_index == -1) {
+        // check codex capacity and realloc
+        if (state->codex_count >= state->codex_capacity) {
+            state->codex_capacity *= 2;
+            state->codex = realloc(state->codex, state->codex_capacity * sizeof(CodexEntry));
+        }
+
         enemy_index = state->codex_count;
+        state->codex[enemy_index].enemy = my_strdup(enemy_name);
 
-        strcpy(state->codex[enemy_index].enemy, enemy_name);
+        state->codex[enemy_index].counter_capacity = 5;
+        state->codex[enemy_index].counters = malloc(state->codex[enemy_index].counter_capacity * sizeof(CodexCounter));
+        
         state->codex[enemy_index].counter_count = 0;
-
-        strcpy(state->codex[enemy_index].counters[0].type, type);
-        strcpy(state->codex[enemy_index].counters[0].name, entity_name);
-        state->codex[enemy_index].counter_count++;
         state->codex_count++;
 
         printf("» Codex entry created: %s\n", enemy_name);
@@ -261,17 +300,23 @@ void learn_effective_helper(GameState *state, const char *type, const char *enti
             // Duplicate typed counters are silently ignored (no statechange).
             if (strcmp(state->codex[enemy_index].counters[i].type, type) == 0 && strcmp(state->codex[enemy_index].counters[i].name, entity_name) == 0) {
                 printf("» Effectiveness already noted\n");
-                break;
+                return;
             }
         }
 
-        // update codex entry
-        int codex_index = state->codex[enemy_index].counter_count;
-        strcpy(state->codex[enemy_index].counters[codex_index].type, type);
-        strcpy(state->codex[enemy_index].counters[codex_index].name, entity_name);
-
         printf("» Codex entry updated: %s\n", enemy_name);
     }
+
+    // check counters and realloc
+    if (state->codex[enemy_index].counter_count >= state->codex[enemy_index].counter_capacity) {
+        state->codex[enemy_index].counter_capacity *= 2;
+        state->codex[enemy_index].counters = realloc(state->codex[enemy_index].counters, state->codex[enemy_index].counter_capacity * sizeof(CodexCounter));
+    }
+
+    int codex_index = state->codex[enemy_index].counter_count;
+    state->codex[enemy_index].counters[codex_index].type = my_strdup(type);
+    state->codex[enemy_index].counters[codex_index].name = my_strdup(entity_name);
+    state->codex[enemy_index].counter_count++;
 }
 
 // Function: Register a typed counter (card) in the codex for the specified enemy
@@ -352,11 +397,7 @@ void execute_fight_enemy(GameState *state, const char *enemy_name) {
                 for (int potion_index = 0; potion_index < state->potion_count; potion_index++) {
                     if(strcmp(state->potions[potion_index].name, name) == 0) {
 
-                        for (int j = 0; j < state->potion_count; j++) {
-                            state->potions[j] = state->potions[j + 1];
-                        }
-                        
-                        state->potion_count--;
+                        remove_potion(state, potion_index);
                         break;
                     }
                 }
@@ -400,11 +441,17 @@ void execute_fight_enemy(GameState *state, const char *enemy_name) {
             if (strcmp(state->defeated_log[i].enemy, enemy_name) == 0) {
                 state->defeated_log[i].count++;
                 is_enemy_defeated_before = 1;
+                break;
             }
         }
 
-        if ( !(is_enemy_defeated_before == 1) ) {
-            strcpy(state->defeated_log[state->defeated_count].enemy, enemy_name);
+        if (is_enemy_defeated_before == 0) {
+            // check defeated log capacity and realloc
+            if (state->defeated_count >= state->defeated_capacity) {
+                state->defeated_capacity *= 2;
+                state->defeated_log = realloc(state->defeated_log, state->defeated_capacity * sizeof(DefeatedEntry));
+            }            
+            state->defeated_log[state->defeated_count].enemy = my_strdup(enemy_name);
             state->defeated_log[state->defeated_count].count = 1;
             state->defeated_count++;
         }
@@ -450,7 +497,6 @@ void execute_discard_potion(GameState *state, const char *potion_name) {
         
         if (strcmp(state->potions[i].name, potion_name) == 0) {
             remove_potion(state, i);
-            state->potion_count--;
 
             printf("» Potion discarded: %s\n", potion_name);
             return;
