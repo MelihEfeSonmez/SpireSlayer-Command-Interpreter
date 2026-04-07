@@ -229,12 +229,12 @@ void execute_remove_upgraded_card(GameState *state, const char *card_name) {
             
             remove_card(state, i);
             
-            printf("» upgraded card removed: %s\n", card_name);
+            printf("» Upgraded card removed: %s\n", card_name);
             return;
         }
     }
     
-    printf("» Card not found: %s\n", card_name);
+    printf("» Upgraded card not found: %s\n", card_name);
 }
 
 // Function: If at least one base copy is in the deck, convert one base copy into an upgraded copy. Otherwise, nothing changes.
@@ -540,7 +540,7 @@ void execute_sell_upgraded_card(GameState *state, const char *card_name, int pri
     printf("» Upgraded card not found: %s\n", card_name);
 }
 
-// Function: If the item (card) exists, remove it and add the given gold amount. Otherwise, nothing changes.
+// Function: If the item (potion) exists, remove it and add the given gold amount. Otherwise, nothing changes.
 void execute_sell_potion(GameState *state, const char *potion_name, int price) {
     for (int i = 0; i < state->potion_count; i++) {
 
@@ -568,7 +568,13 @@ void execute_mark_exhaust(GameState *state, const char *card_name) {
         }
     }
 
-    strcpy(state->exhaust_tags[state->exhaust_count], card_name);
+    // check exhaust tag capacity and realloc
+    if (state->exhaust_count >= state->exhaust_capacity) {
+        state->exhaust_capacity *= 2;
+        state->exhaust_tags = realloc(state->exhaust_tags, state->exhaust_capacity * sizeof(char*));
+    }
+
+    state->exhaust_tags[state->exhaust_count] = my_strdup(card_name);
     state->exhaust_count++;
 
     for (int i = 0; i < state->deck_count; i++) {
@@ -643,11 +649,8 @@ void execute_fight_enemy_bounty(GameState *state, const char *enemy_name, int re
                 for (int potion_index = 0; potion_index < state->potion_count; potion_index++) {
                     if(strcmp(state->potions[potion_index].name, name) == 0) {
 
-                        for (int j = 0; j < state->potion_count; j++) {
-                            state->potions[j] = state->potions[j + 1];
-                        }
-                        
-                        state->potion_capacity--;
+                        remove_potion(state, potion_index);
+
                         break;
                     }
                 }
@@ -691,11 +694,18 @@ void execute_fight_enemy_bounty(GameState *state, const char *enemy_name, int re
             if (strcmp(state->defeated_log[i].enemy, enemy_name) == 0) {
                 state->defeated_log[i].count++;
                 is_enemy_defeated_before = 1;
+                break;
             }
         }
 
-        if ( !(is_enemy_defeated_before == 1) ) {
-            strcpy(state->defeated_log[state->defeated_count].enemy, enemy_name);
+        if (is_enemy_defeated_before == 0) {
+            // check defeated log capacity and realloc
+            if (state->defeated_count >= state->defeated_capacity) {
+                state->defeated_capacity *= 2;
+                state->defeated_log = realloc(state->defeated_log, state->defeated_capacity * sizeof(DefeatedEntry));
+            }
+
+            state->defeated_log[state->defeated_count].enemy = my_strdup(enemy_name);
             state->defeated_log[state->defeated_count].count = 1;
             state->defeated_count++;
         }
