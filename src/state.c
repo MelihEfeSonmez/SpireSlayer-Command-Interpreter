@@ -41,3 +41,50 @@ void init_game_state(GameState *state) {
     state->exhaust_tags = malloc(state->exhaust_capacity * sizeof(char*));
     state->exhaust_count = 0;
 }
+
+// Function: free all dynamically allocated memory in the state
+void free_game_state(GameState *state) {
+    
+    // free deck
+    for (int i = 0; i < state->deck_count; i++) {
+        free(state->deck[i].name);
+    }
+    free(state->deck);
+
+    // free relics
+    for (int i = 0; i < state->relic_count; i++) {
+        free(state->relics[i].name);
+    }
+    free(state->relics);
+
+    // free potions
+    for (int i = 0; i < state->potion_count; i++) {
+        free(state->potions[i].name);
+    }
+    free(state->potions);
+
+    // free codex
+    for (int i = 0; i < state->codex_count; i++) {
+        free(state->codex[i].enemy);
+        
+        // free counters
+        for (int j = 0; j < state->codex[i].counter_count; j++) {
+            free(state->codex[i].counters[j].type);
+            free(state->codex[i].counters[j].name);
+        }
+        free(state->codex[i].counters);
+    }
+    free(state->codex);
+
+    // free defeated log
+    for (int i = 0; i < state->defeated_count; i++) {
+        free(state->defeated_log[i].enemy);
+    }
+    free(state->defeated_log);
+
+    // free exhaust tags
+    for (int i = 0; i < state->exhaust_count; i++) {
+        free(state->exhaust_tags[i]);
+    }
+    free(state->exhaust_tags);
+}

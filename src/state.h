@@ -86,5 +86,6 @@ typedef struct {
 
 // Function: initialize the game state with starting conditions
 void init_game_state(GameState *state);
+void free_game_state(GameState *state);
 
 #endif

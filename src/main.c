@@ -572,5 +572,6 @@ int main(void) {
         }
     }
 
+    free_game_state(&state);
     return 0;
 }
