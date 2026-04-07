@@ -45,25 +45,24 @@ int tokenize_line(const char *line, char tokens[MAX_TOKENS][MAX_LINE_LENGTH], in
         // If we hit the end of the string after skipping spaces, exit the loop
         if (*p == '\0') break;
         
-        // Record how many spaces preceded this specific token
+        // Record how many spaces preceded this token
         if (count < MAX_TOKENS) { 
             spaces_before[count] = space_count; 
         }
         
-        // Determine the length of the current
+        // Determine length of the current
         int len = 0;
         while (p[len] != '\0' && p[len] != ' ') { 
             len++; 
         }
         
-        // Copy the token into our array and add the null-terminator
+        // Copy the token into array and add the null-terminator
         if (count < MAX_TOKENS) { 
             strncpy(tokens[count], p, len); 
             tokens[count][len] = '\0'; 
             count++; 
         } 
         
-        // Advance the pointer past the word that copied
         p += len; 
     }
     
@@ -91,7 +90,7 @@ int is_valid_name(char tokens[MAX_TOKENS][MAX_LINE_LENGTH], int spaces_before[MA
         return 0; 
     }
 
-    // List of reserved keywords that cannot be used in a name
+    // List of reserved keywords
     const char *reserved[] = {
         "Ironclad", "gains", "gold", "max", "hp", "card", "relic", "potion", "buys", "for", "removes", "upgraded", "upgrades", "enters", "room", 
         "learns", "is", "effective", "against", "fights", "heals", "takes", "damage", "discards", "sells", "marks", "as", "exhaust", "Total", 
