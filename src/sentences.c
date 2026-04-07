@@ -423,9 +423,9 @@ void execute_fight_enemy(GameState *state, const char *enemy_name) {
 
                 int index_to_remove = -1;
 
-                if (target_base_index != -1) {
+                if (target_base_index != -1) { // there exist base target
                     index_to_remove = target_base_index;
-                } else if (target_upgraded_index != -1) {
+                } else if (target_upgraded_index != -1) { // there exist upgraded target
                     index_to_remove = target_upgraded_index;
                 }
  
@@ -436,7 +436,7 @@ void execute_fight_enemy(GameState *state, const char *enemy_name) {
         }
         int is_enemy_defeated_before = 0;
 
-        for (int i = 0; i < state->defeated_count; i++) {
+        for (int i = 0; i < state->defeated_count; i++) { // search whether defeated
                 
             if (strcmp(state->defeated_log[i].enemy, enemy_name) == 0) {
                 state->defeated_log[i].count++;
@@ -579,7 +579,7 @@ void execute_mark_exhaust(GameState *state, const char *card_name) {
 
     for (int i = 0; i < state->deck_count; i++) {
         if (strcmp(state->deck[i].name, card_name) == 0) {
-            state->deck[i].is_exhaust = 1;
+            state->deck[i].is_exhaust = 1; // mark as exhaust
         }
     }
     
