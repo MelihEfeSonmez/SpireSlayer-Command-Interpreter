@@ -559,9 +559,25 @@ int main(void) {
 
         chomp_newline(line); // remove new line character
 
-        // check "Exit" command line
-        if (strcmp(line, "Exit") == 0) {
-            break;
+        char *ptr = line;
+        // skip leading whitespaces
+        while (*ptr == ' ') {
+            ptr++;
+        }
+
+        // check whether it is "Exit"
+        if (strncmp(ptr, "Exit", 4) == 0) {
+            ptr += 4;
+
+            // skip trailing whitespaces
+            while (*ptr == ' ') {
+                ptr++;
+            }
+
+            // check reaching end character
+            if (*ptr == '\0') {
+                break;
+            }
         }
 
         // try to parse and execute the command line 
