@@ -550,7 +550,6 @@ int main(void) {
 
     // loop which continues until reaching "Exit" command line
     while (1) {
-        printf(">> ");
         fflush(stdout);
 
         // check whether there is any command line
